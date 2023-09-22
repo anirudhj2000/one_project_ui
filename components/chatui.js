@@ -3,7 +3,7 @@ import React from "react";
 const Chat = ({ text, onChange, onSubmit, onClear }) => {
 
     return (
-        <div class="relative flex h-10 w-full">
+        <div className="relative flex h-10 w-800">
 
             <input
                 type="text"
