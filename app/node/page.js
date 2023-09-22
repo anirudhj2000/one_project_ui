@@ -4,6 +4,7 @@ import Chat from "@/components/chatui";
 import ReactFlow, { useNodesState, useEdgesState, addEdge } from 'reactflow';
 import NodeDetails from "@/components/nodeDetails";
 
+
 import 'reactflow/dist/style.css';
 
 const initialNodes = [
@@ -54,6 +55,7 @@ const Node = () => {
                 />
             </div>
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-5/12">
+
                 <div className="my-8">
                     <Chat text={search} onChange={handleInputChange} onSubmit={() => { console.log("Abcd") }} onClear={() => { setSearch('') }} />
                 </div>
