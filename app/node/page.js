@@ -111,14 +111,12 @@ const Node = () => {
 
                 />
             </div>
-
-            {show ? <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-full w-5/12">
-
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-5/12">
                 <div className="my-8">
                     <Chat text={search} onChange={handleInputChange} onSubmit={() => { GetPromptResult() }} onClear={() => { setSearch('') }} />
                 </div>
-            </div> : null}
-            <div className={`fixed top-0 right-0 h-screen w-64 bg-gray-200 transition-transform duration-500 transform ${isNodeOpen ? '-translate-x-0' : 'translate-x-full'}`}>
+            </div>
+            <div className={`fixed top-0 right-0 h-screen w-4/12 bg-gray-200 transition-transform duration-500 transform drop-shadow-2xl ${isNodeOpen ? '-translate-x-0' : 'translate-x-full'}`}>
                 <NodeDetails nodeData={nodeData} isNodeOpen={isNodeOpen} handleNodeOpen={handleNodeOpen} />
             </div>
         </div>
