@@ -1,5 +1,4 @@
 'use client'
-import Nav from './components/header/header'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
