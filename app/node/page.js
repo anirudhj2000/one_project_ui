@@ -3,10 +3,9 @@ import React from "react";
 import Chat from "@/components/chatui";
 import ReactFlow, { useNodesState, useEdgesState, addEdge } from 'reactflow';
 import NodeDetails from "@/components/nodeDetails";
-import axios from 'axios'
-
 
 import 'reactflow/dist/style.css';
+import { GetPromptResult } from "@/service/promtsAPI";
 
 // const initialNodes = [
 //     { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
@@ -42,22 +41,6 @@ const Node = () => {
         handleNodeOpen();
     };
 
-    const GetPromptResult = () => {
-
-        try {
-            axios.post('http://127.0.0.1:8000/flows/prompt', {
-                string: search
-            }).then((res) => {
-                HandleResponse(res.data)
-                setShow(false)
-
-            })
-        }
-        finally {
-
-        }
-    }
-
     const getPointOnCircle = (x, y, radius) => {
         // Calculate the angle
         const angle = Math.random() * 2 * Math.PI;
@@ -70,6 +53,12 @@ const Node = () => {
         return { x: pointX, y: pointY };
     }
 
+    const $GetPromptResult = () => {
+        GetPromptResult(search).then((res) => {
+            HandleResponse(res.data)
+            setShow(false)
+        })
+    }
 
     const HandleResponse = (data) => {
         let listNodes = [];
@@ -113,10 +102,10 @@ const Node = () => {
             </div>
             {show ? <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 w-5/12">
                 <div className="my-8">
-                    <Chat text={search} onChange={handleInputChange} onSubmit={() => { GetPromptResult() }} onClear={() => { setSearch('') }} />
+                    <Chat text={search} onChange={handleInputChange} onSubmit={() => { $GetPromptResult() }} onClear={() => { setSearch('') }} />
                 </div>
             </div> : null}
-            <div className={`fixed top-0 right-0 h-screen w-4/12 bg-gray-200 transition-transform duration-500 transform drop-shadow-2xl ${isNodeOpen ? '-translate-x-0' : 'translate-x-full'}`}>
+            <div className={`fixed top-0 right-0 h-screen w-4/12 bg-gray-200 transition-transform duration-500 transform drop-shadow-2xl ${isNodeOpen ? '-translate-x-0' : 'translate-x-full hidden'}`}>
                 <NodeDetails nodeData={nodeData} isNodeOpen={isNodeOpen} handleNodeOpen={handleNodeOpen} />
             </div>
         </div>
