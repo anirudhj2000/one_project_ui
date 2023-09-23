@@ -28,6 +28,7 @@ const Node = () => {
 
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [show, setShow] = React.useState(true)
 
     const onConnect = React.useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
@@ -42,11 +43,14 @@ const Node = () => {
     };
 
     const GetPromptResult = () => {
+
         try {
             axios.post('http://127.0.0.1:8000/flows/prompt', {
                 string: search
             }).then((res) => {
                 HandleResponse(res.data)
+                setShow(false)
+
             })
         }
         finally {
@@ -54,19 +58,34 @@ const Node = () => {
         }
     }
 
+    const getPointOnCircle = (x, y, radius) => {
+        // Calculate the angle
+        const angle = Math.random() * 2 * Math.PI;
+
+        // Calculate the coordinates of the point on the circle
+        const pointX = x + radius * Math.cos(angle);
+        const pointY = y + radius * Math.sin(angle);
+
+        // Return the coordinates of the point
+        return { x: pointX, y: pointY };
+    }
+
+
     const HandleResponse = (data) => {
         let listNodes = [];
         let listEdge = [];
 
-        data.nodes.map((item) => {
-            listNodes.push(item)
+        listNodes.push({ id: '1', position: { x: 400 + '', y: 400 + '' }, data: { label: search } })
+
+        data.nodes.map((item, index) => {
+            let xy = getPointOnCircle(400, 400, 300);
+            let obj = { id: (index + 2) + '', position: { x: Math.round(xy.x) + "", y: Math.round(xy.y) + "" }, data: { label: item } }
+
+            listNodes.push(obj)
+            listEdge.push({ id: `e1-${index + 2}`, source: '1', target: (index + 2) + '' })
         })
 
-        data.edges.map((item) => {
-            listEdge.push(item);
-        })
-
-        console.log("lalala", listNodes, listEdge)
+        console.log("node", listEdge, listNodes)
 
         setNodes(listNodes)
         setEdges(listEdge)
@@ -92,12 +111,13 @@ const Node = () => {
 
                 />
             </div>
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-5/12">
+
+            {show ? <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-full w-5/12">
 
                 <div className="my-8">
                     <Chat text={search} onChange={handleInputChange} onSubmit={() => { GetPromptResult() }} onClear={() => { setSearch('') }} />
                 </div>
-            </div>
+            </div> : null}
             <div className={`fixed top-0 right-0 h-screen w-64 bg-gray-200 transition-transform duration-500 transform ${isNodeOpen ? '-translate-x-0' : 'translate-x-full'}`}>
                 <NodeDetails nodeData={nodeData} isNodeOpen={isNodeOpen} handleNodeOpen={handleNodeOpen} />
             </div>
