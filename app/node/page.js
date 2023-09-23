@@ -77,8 +77,8 @@ const Node = () => {
         console.log("node", listEdge, listNodes)
 
 
-        setNodes([...nodes,...listNodes])
-        setEdges([...edges,...listEdge])
+        setNodes([...nodes, ...listNodes])
+        setEdges([...edges, ...listEdge])
     }
 
     const handleSubPromptData = (subPromptData) => {
@@ -107,12 +107,12 @@ const Node = () => {
                 />
             </div>
             {show ? <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 w-5/12">
-                <div className="my-8">
+                <div className="my-2">
                     <Chat text={search} onChange={handleInputChange} onSubmit={() => generatePromptResult()} onClear={() => { setSearch('') }} />
                 </div>
             </div> : null}
             <div className={`fixed top-0 right-0 h-screen w-4/12 bg-gray-200 transition-transform duration-500 transform drop-shadow-2xl ${isNodeOpen ? '-translate-x-0' : 'translate-x-full hidden'}`}>
-                <NodeDetails nodeData={nodeData} isNodeOpen={isNodeOpen} handleNodeOpen={handleNodeOpen} handleSubPromptData={handleSubPromptData}/>
+                <NodeDetails nodeData={nodeData} isNodeOpen={isNodeOpen} handleNodeOpen={handleNodeOpen} handleSubPromptData={handleSubPromptData} />
             </div>
         </div>
     )
