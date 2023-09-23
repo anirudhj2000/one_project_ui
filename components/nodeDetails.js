@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
+import { GetPromptResult } from '@/service/promtsAPI';
 
-const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData }) => {
+const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [subPrompt, setSubPrompt] = useState('');
 
@@ -11,6 +12,12 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData }) => {
     const handleClick = () => {
         setIsOpen(!isOpen);
     };
+
+    const getSubPromptData = () => {
+        GetPromptResult(subPrompt).then( response => {
+            handleSubPromptData(response);
+        })
+    }
 
     const onChangeSubPrompt = (event) => {
         setSubPrompt(event.target.value);
@@ -42,7 +49,7 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData }) => {
                 <button
                     className="rounded-border-0 z-10 select-none rounded bg-[#128059] p-1 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none peer-placeholder-shown:pointer-events-none peer-placeholder-shown:bg-blue-gray-500 peer-placeholder-shown:opacity-50 peer-placeholder-shown:shadow-none"
                     type="button"
-                    data-ripple-light="true"
+                    data-ripple-light="true" onClick={() => getSubPromptData()}
                 >
                     <SendIcon />
                 </button>
