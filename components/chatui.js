@@ -20,7 +20,7 @@ const Chat = ({ text, onChange, onSubmit, onClear }) => {
                 type="button"
                 data-ripple-light="true"
             >
-                Send
+                Start
             </button>
         </div>
     )

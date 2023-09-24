@@ -1,7 +1,7 @@
 'use client'
 import React from "react";
 import Chat from "@/components/chatui";
-import ReactFlow, { useNodesState, useEdgesState, addEdge } from 'reactflow';
+import ReactFlow, { useNodesState, useEdgesState, addEdg,MiniMap,Controls } from 'reactflow';
 import NodeDetails from "@/components/nodeDetails";
 
 import 'reactflow/dist/style.css';
@@ -28,6 +28,7 @@ const Node = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [show, setShow] = React.useState(true)
+    const [loading,setLoading] = React.useState(false)
 
     const onConnect = React.useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
@@ -41,22 +42,23 @@ const Node = () => {
         handleNodeOpen();
     };
 
-    const getPointOnCircle = (x, y, radius) => {
-        // Calculate the angle
-        const angle = Math.random() * 2 * Math.PI;
+    React.useEffect(() => {
+       window.addEventListener('keydown', handleKeyDown);
+    },[])
+    const handleKeyDown = (event) => {
 
-        // Calculate the coordinates of the point on the circle
-        const pointX = x + radius * Math.cos(angle);
-        const pointY = y + radius * Math.sin(angle);
-
-        // Return the coordinates of the point
-        return { x: pointX, y: pointY };
-    }
+        if (event.key === 'Enter') {
+            generatePromptResult()
+        }
+                
+    };
 
     const generatePromptResult = () => {
+        setLoading(true)
+        setShow(false)
         GetPromptResult(search).then((res) => {
             HandleResponse(res.data)
-            setShow(false)
+            
         })
     }
 
@@ -64,11 +66,10 @@ const Node = () => {
         let listNodes = [];
         let listEdge = [];
 
-        listNodes.push({ id: '1', position: { x: 400 + '', y: 400 + '' }, data: { label: search } })
+        listNodes.push({ id: '1', position: { x: 500 , y: 200  }, data: { label: search } })
 
         data.nodes.map((item, index) => {
-            let xy = getPointOnCircle(400, 400, 300);
-            let obj = { id: (index + 2) + '', position: { x: Math.round(xy.x) + "", y: Math.round(xy.y) + "" }, data: { label: item } }
+            let obj = { id: (index + 2) + '', position: { x: index * 200, y: 600  }, data: { label: item } }
 
             listNodes.push(obj)
             listEdge.push({ id: `e1-${index + 2}`, source: '1', target: (index + 2) + '' })
@@ -79,6 +80,7 @@ const Node = () => {
 
         setNodes([...nodes, ...listNodes])
         setEdges([...edges, ...listEdge])
+        setLoading(false)
     }
 
     const handleSubPromptData = (subPromptData) => {
@@ -103,14 +105,18 @@ const Node = () => {
                     onEdgesChange={onEdgesChange}
                     onConnect={onConnect}
                     onNodeClick={onNodeClick}
+                    fitView
 
-                />
+                >
+                <Controls/>
+                {nodes.length > 0 ?  <MiniMap/> :null}
+                </ReactFlow>
             </div>
             {show ? <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 w-5/12">
                 <div className="my-2">
                     <Chat text={search} onChange={handleInputChange} onSubmit={() => generatePromptResult()} onClear={() => { setSearch('') }} />
                 </div>
-            </div> : null}
+            </div> : loading ?   <></> : null}
             <div className={`fixed top-0 right-0 h-screen w-4/12 bg-gray-200 transition-transform duration-500 transform drop-shadow-2xl ${isNodeOpen ? '-translate-x-0' : 'translate-x-full hidden'}`}>
                 <NodeDetails nodeData={nodeData} isNodeOpen={isNodeOpen} handleNodeOpen={handleNodeOpen} handleSubPromptData={handleSubPromptData} />
             </div>

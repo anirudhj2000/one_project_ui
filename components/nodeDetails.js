@@ -9,9 +9,14 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
     const [subPrompt, setSubPrompt] = useState('');
 
 
-    const handleClick = () => {
-        setIsOpen(!isOpen);
-    };
+    React.useEffect(() => {
+       document.addEventListener('keydown', handleKeyPress);
+    },[])
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            getSubPromptData()
+        }
+    }
 
     const getSubPromptData = () => {
         GetPromptResult(subPrompt).then( response => {
@@ -26,7 +31,7 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
     return (
         <div className='flex flex-col h-full bg-[#000] justify-between'>
             <div className='flex flex-row w-full bg-[#202123] justify-end items-center pt-5 pb-5 pr-2 self-start'>
-                <div className='text-white text-bold'>{nodeData?.data.label || ''}</div>
+                {/* s<div className='text-white text-bold'>{nodeData?.data.label || ''}</div> */}
                 <button onClick={handleNodeOpen}
                     className="flex flex-col cursor-pointer text-white hover:bg-red-200 hover:text-black">
                     <CloseIcon />
