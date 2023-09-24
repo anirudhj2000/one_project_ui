@@ -3,9 +3,10 @@ import React from "react";
 import Chat from "@/components/chatui";
 import ReactFlow, { useNodesState, useEdgesState, addEdg,MiniMap,Controls } from 'reactflow';
 import NodeDetails from "@/components/nodeDetails";
-
+import Loader from "@/components/loader";
 import 'reactflow/dist/style.css';
 import { GetPromptResult } from "@/service/promtsAPI";
+import { sampleResponse } from "@/utils/consts";
 
 // const initialNodes = [
 //     { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
@@ -42,32 +43,58 @@ const Node = () => {
 
     
 
-    const generatePromptResult = () => {
+    const postPromptResult = () => {
         setLoading(true)
         setShow(false)
-        console.log("search value",search)
-        GetPromptResult(search).then((res) => {
-            HandleResponse(res.data)
-        })
+        // GetPromptResult(search).then((res) => {
+        //     // HandleResponse(res.data)
+        //     generatePromptResult(res.data.id)
+        // })
+        generatePromptResult('67')
     }
 
-    const HandleResponse = (data) => {
+    const generatePromptResult = (id) => {
+        setLoading(true)
+        HandleResponse(sampleResponse,id)
+    }
+
+    const HandleResponse = (data, id) => {
         let listNodes = [];
         let listEdge = [];
+        let root = {x:data.length*150,y:200};
 
-        let root = {x:listNodes.length*100,y:200}
+        let list= data
 
-        listNodes.push({ id: '1', position: root, data: { label: search } })
+        list.map((rootNode,rootIndex) => {
+            if(rootIndex == 0){
+                listNodes.push({ id: rootNode.id, position: root, data: { label: search } })
+            }
 
-        data.nodes.map((item, index) => {
-            let obj = { id: (index + 2) + '', position: { x: 100 * ((listNodes.length/2) - index), y: 600  }, data: { label: item } }
+            let parentNodeRes = {}
+            if(rootIndex != 0){
+                list.map((res) => {
+                        res.responses.map((res1) => {
+                            if(res1.res_id == rootNode.parent_response_id){
+                                parentNodeRes = res1
+                            }
+                        })
+                })
+            }
+            else{
+                parentNodeRes = rootNode
+            }
 
-            listNodes.push(obj)
-            listEdge.push({ id: `e1-${index + 2}`, source: '1', target: (index + 2) + '' })
+            let parentNode = listNodes.find((item) => item.id == (rootIndex == 0 ? parentNodeRes.id :  parentNodeRes.res_id))
+
+            
+            rootNode.responses.map((node,nodeIndex) => {
+                 
+                let obj = { id: node.res_id, position: { x:parentNode.position.x/2 +  300 * (nodeIndex), y:parentNode.position.y + 300  }, data: { label: node.response_string } };
+                listNodes.push(obj)
+
+                listEdge.push({ id: `e1-${node.res_id}`, source: parentNode.id, target: node.res_id})
+            })
         })
-
-        console.log("node", listEdge, listNodes)
-
 
         setNodes([...nodes, ...listNodes])
         setEdges([...edges, ...listEdge])
@@ -76,13 +103,11 @@ const Node = () => {
     }
 
     const handleSubPromptData = (subPromptData) => {
-        console.log(subPromptData)
         HandleResponse(subPromptData.data)
     }
 
 
     const handleInputChange = (event) => {
-        console.log("searcg en",event.target.value)
         setSearch(event.target.value);
     };
     return (
@@ -107,9 +132,10 @@ const Node = () => {
             </div>
             {show ? <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 w-5/12">
                 <div className="my-2">
-                    <Chat text={search} onChange={handleInputChange} onSubmit={() => {generatePromptResult();console.log("1212",search)}}  />
+                    <Chat text={search} onChange={handleInputChange} onSubmit={() => {postPromptResult()}}  />
                 </div>
-            </div> : loading ?   <></> : null}
+            </div> : loading ?  <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 z-10"><Loader/></div> : null}
+            
             <div className={`fixed top-0 right-0 h-screen w-4/12 bg-gray-200 transition-transform duration-500 transform drop-shadow-2xl ${isNodeOpen ? '-translate-x-0' : 'translate-x-full hidden'}`}>
                 <NodeDetails nodeData={nodeData} isNodeOpen={isNodeOpen} handleNodeOpen={handleNodeOpen} handleSubPromptData={handleSubPromptData} />
             </div>
