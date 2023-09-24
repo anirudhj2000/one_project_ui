@@ -22,9 +22,7 @@ const Node = () => {
 
     const [search, setSearch] = React.useState('')
     const [isNodeOpen, setIsNodeOpen] = React.useState(false)
-
     const [nodeData, setNodeData] = React.useState()
-
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [show, setShow] = React.useState(true)
@@ -42,16 +40,7 @@ const Node = () => {
         handleNodeOpen();
     };
 
-    React.useEffect(() => {
-       window.addEventListener('keydown', handleKeyDown);
-    },[])
-    const handleKeyDown = (event) => {
-
-        if (event.key === 'Enter') {
-            generatePromptResult()
-        }
-                
-    };
+    
 
     const generatePromptResult = () => {
         setLoading(true)
@@ -93,6 +82,7 @@ const Node = () => {
 
 
     const handleInputChange = (event) => {
+        console.log("searcg en",event.target.value)
         setSearch(event.target.value);
     };
     return (
@@ -117,7 +107,7 @@ const Node = () => {
             </div>
             {show ? <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 w-5/12">
                 <div className="my-2">
-                    <Chat text={search} onChange={handleInputChange} onSubmit={() => {generatePromptResult();console.log("asdas",search)}}  />
+                    <Chat text={search} onChange={handleInputChange} onSubmit={() => {generatePromptResult();console.log("1212",search)}}  />
                 </div>
             </div> : loading ?   <></> : null}
             <div className={`fixed top-0 right-0 h-screen w-4/12 bg-gray-200 transition-transform duration-500 transform drop-shadow-2xl ${isNodeOpen ? '-translate-x-0' : 'translate-x-full hidden'}`}>

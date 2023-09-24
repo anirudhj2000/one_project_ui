@@ -2,6 +2,18 @@ import React from "react";
 
 const Chat = ({ text, onChange, onSubmit, onClear }) => {
 
+    React.useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown);
+     },[])
+ 
+ 
+     const handleKeyDown = (event) => {
+         console.log("asdas",text)
+         if (event.key === 'Enter') {
+             onSubmit()
+         }      
+     };
+
     return (
         <div className="relative flex h-10 w-800">
 
