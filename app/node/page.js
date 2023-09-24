@@ -44,18 +44,18 @@ const Node = () => {
     
 
     const postPromptResult = () => {
-        setLoading(true)
-        setShow(false)
-        PostPrompts(search).then((res) => {
+        // setLoading(true)
+        // setShow(false)
+        // PostPrompts(search).then((res) => {
             // HandleResponse(res.data)
-            generatePromptResult(res.data.id)
-        })
+            generatePromptResult('')
+        // })
     }
 
     const generatePromptResult = (id) => {
-        setLoading(true)
+       
         GetPromptResult(id).then((res) => {
-            HandleResponse(res.data, id)
+            HandleResponse(sampleResponse, id)
         })
     }
 
@@ -75,7 +75,7 @@ const Node = () => {
             if(rootIndex != 0){
                 list.map((res) => {
                         res.responses.map((res1) => {
-                            if(res1.res_id == rootNode.parent_response_id){
+                            if(res1.response_id == rootNode.parent_response_id){
                                 parentNodeRes = res1
                             }
                         })
@@ -85,15 +85,15 @@ const Node = () => {
                 parentNodeRes = rootNode
             }
 
-            let parentNode = listNodes.find((item) => item.id == (rootIndex == 0 ? parentNodeRes.id :  parentNodeRes.res_id))
+            let parentNode = listNodes.find((item) => item.id == (rootIndex == 0 ? parentNodeRes.id :  parentNodeRes.response_id))
 
             
             rootNode.responses.map((node,nodeIndex) => {
                  
-                let obj = { id: node.res_id, position: { x:parentNode.position.x/2 +  300 * (nodeIndex), y:parentNode.position.y + 300  }, data: { label: node.response_string } };
+                let obj = { id: node.response_id, position: { x:parentNode.position.x/2 +  300 * (nodeIndex), y:parentNode.position.y + 400  }, data: { label: node.response_string } };
                 listNodes.push(obj)
 
-                listEdge.push({ id: `e1-${node.res_id}`, source: parentNode.id, target: node.res_id})
+                listEdge.push({ id: `e1-${node.response_id}`, source: parentNode.id, target: node.response_id})
             })
         })
 
@@ -127,7 +127,7 @@ const Node = () => {
                     fitView
 
                 >
-                <Controls/>
+                {nodes.length > 0 ? <Controls/> :null}
                 {nodes.length > 0 ?  <MiniMap style={{height:80,width:120,background:'#000'}}/> :null}
                 </ReactFlow>
             </div>

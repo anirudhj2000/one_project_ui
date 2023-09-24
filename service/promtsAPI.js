@@ -9,7 +9,7 @@ export const PostPrompt = (search) => {
     })
 }
 
-export const GetPromptResult = (search) => {
+export const GetPromptResult = (id) => {
 
-    return axios.get(baseUrl + 'flows/prompt',)
+    return axios.get(baseUrl + `flows/prompt?prompt_id=${id}`,)
 }
