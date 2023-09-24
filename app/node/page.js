@@ -5,7 +5,7 @@ import ReactFlow, { useNodesState, useEdgesState, addEdg,MiniMap,Controls } from
 import NodeDetails from "@/components/nodeDetails";
 import Loader from "@/components/loader";
 import 'reactflow/dist/style.css';
-import { GetPromptResult } from "@/service/promtsAPI";
+import { GetPromptResult,PostPrompts } from "@/service/promtsAPI";
 import { sampleResponse } from "@/utils/consts";
 
 // const initialNodes = [
@@ -46,16 +46,17 @@ const Node = () => {
     const postPromptResult = () => {
         setLoading(true)
         setShow(false)
-        // GetPromptResult(search).then((res) => {
-        //     // HandleResponse(res.data)
-        //     generatePromptResult(res.data.id)
-        // })
-        generatePromptResult('67')
+        PostPrompts(search).then((res) => {
+            // HandleResponse(res.data)
+            generatePromptResult(res.data.id)
+        })
     }
 
     const generatePromptResult = (id) => {
         setLoading(true)
-        HandleResponse(sampleResponse,id)
+        GetPromptResult(id).then((res) => {
+            HandleResponse(res.data, id)
+        })
     }
 
     const HandleResponse = (data, id) => {
@@ -103,7 +104,7 @@ const Node = () => {
     }
 
     const handleSubPromptData = (subPromptData) => {
-        HandleResponse(subPromptData.data)
+        GetPromptResult(res.data.id)
     }
 
 

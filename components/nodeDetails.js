@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
-import { GetPromptResult } from '@/service/promtsAPI';
+import { GetPromptResult,PostPrompt} from '@/service/promtsAPI';
 
 const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +19,7 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
     }
 
     const getSubPromptData = () => {
-        GetPromptResult(subPrompt).then( response => {
+        PostPrompt(subPrompt).then( response => {
             handleSubPromptData(response);
         })
     }
