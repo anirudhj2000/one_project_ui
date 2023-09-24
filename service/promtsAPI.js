@@ -11,7 +11,5 @@ export const PostPrompt = (search) => {
 
 export const GetPromptResult = (search) => {
 
-    return axios.post(baseUrl + 'flows/prompt', {
-        string: search
-    })
+    return axios.get(baseUrl + 'flows/prompt',)
 }
