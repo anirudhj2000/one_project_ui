@@ -56,9 +56,9 @@ const Node = () => {
     const generatePromptResult = () => {
         setLoading(true)
         setShow(false)
+        console.log("search value",search)
         GetPromptResult(search).then((res) => {
             HandleResponse(res.data)
-            
         })
     }
 
@@ -66,10 +66,12 @@ const Node = () => {
         let listNodes = [];
         let listEdge = [];
 
-        listNodes.push({ id: '1', position: { x: 500 , y: 200  }, data: { label: search } })
+        let root = {x:listNodes.length*100,y:200}
+
+        listNodes.push({ id: '1', position: root, data: { label: search } })
 
         data.nodes.map((item, index) => {
-            let obj = { id: (index + 2) + '', position: { x: index * 200, y: 600  }, data: { label: item } }
+            let obj = { id: (index + 2) + '', position: { x: 100 * ((listNodes.length/2) - index), y: 600  }, data: { label: item } }
 
             listNodes.push(obj)
             listEdge.push({ id: `e1-${index + 2}`, source: '1', target: (index + 2) + '' })
@@ -80,6 +82,7 @@ const Node = () => {
 
         setNodes([...nodes, ...listNodes])
         setEdges([...edges, ...listEdge])
+        setSearch("")
         setLoading(false)
     }
 
@@ -109,12 +112,12 @@ const Node = () => {
 
                 >
                 <Controls/>
-                {nodes.length > 0 ?  <MiniMap/> :null}
+                {nodes.length > 0 ?  <MiniMap style={{height:80,width:120,background:'#000'}}/> :null}
                 </ReactFlow>
             </div>
             {show ? <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 w-5/12">
                 <div className="my-2">
-                    <Chat text={search} onChange={handleInputChange} onSubmit={() => generatePromptResult()} onClear={() => { setSearch('') }} />
+                    <Chat text={search} onChange={handleInputChange} onSubmit={() => {generatePromptResult();console.log("asdas",search)}}  />
                 </div>
             </div> : loading ?   <></> : null}
             <div className={`fixed top-0 right-0 h-screen w-4/12 bg-gray-200 transition-transform duration-500 transform drop-shadow-2xl ${isNodeOpen ? '-translate-x-0' : 'translate-x-full hidden'}`}>
