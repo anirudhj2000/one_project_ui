@@ -5,19 +5,8 @@ import ReactFlow, { useNodesState, useEdgesState, addEdg,MiniMap,Controls } from
 import NodeDetails from "@/components/nodeDetails";
 import Loader from "@/components/loader";
 import 'reactflow/dist/style.css';
-import { GetPromptResult,PostPrompts } from "@/service/promtsAPI";
+import { GetPromptResult,PostPrompt,PostPrompts } from "@/service/promtsAPI";
 import { sampleResponse } from "@/utils/consts";
-
-// const initialNodes = [
-//     { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-//     { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-//     { id: '3', position: { x: 100, y: 0 }, data: { label: '3' } },
-//     { id: '4', position: { x: 100, y: 100 }, data: { label: '4' } },
-//     { id: '5', position: { x: -100, y: 100 }, data: { label: '5' } },
-// ];
-// const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }, { id: 'e1-2', source: '1', target: '3' }, { id: 'e1-2', source: '1', target: '4' }, { id: 'e1-2', source: '1', target: '2' }];
-
-
 
 const Node = () => {
 
@@ -28,6 +17,7 @@ const Node = () => {
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [show, setShow] = React.useState(true)
     const [loading,setLoading] = React.useState(false)
+    const [rootId, setRootId] = React.useState("")
 
     const onConnect = React.useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
@@ -41,25 +31,28 @@ const Node = () => {
         handleNodeOpen();
     };
 
-    
-
     const postPromptResult = () => {
-        // setLoading(true)
-        // setShow(false)
-        // PostPrompts(search).then((res) => {
-            // HandleResponse(res.data)
-            generatePromptResult('')
-        // })
-    }
+        setLoading(true)
+        setShow(false)
+        let searchStr = search
+        let obj = {
+            string : search
+        }
 
-    const generatePromptResult = (id) => {
-       
-        GetPromptResult(id).then((res) => {
-            HandleResponse(sampleResponse, id)
+        PostPrompt(obj).then((res) => {
+            // HandleResponse(res.data)
+            generatePromptResult(res.data.prompt_id,searchStr)
+           localStorage.setItem("root",res.data.prompt_id)
         })
     }
 
-    const HandleResponse = (data, id) => {
+    const generatePromptResult = (id,search) => {
+        GetPromptResult(id).then((res) => {
+            HandleResponse(res.data, id,search)
+        })
+    }
+
+    const HandleResponse = (data, id,search) => {
         let listNodes = [];
         let listEdge = [];
         let root = {x:data.length*150,y:200};
@@ -103,8 +96,9 @@ const Node = () => {
         setLoading(false)
     }
 
-    const handleSubPromptData = (subPromptData) => {
-        GetPromptResult(res.data.id)
+
+    const handleSubPromptData = () => {
+        generatePromptResult(localStorage.getItem("root"))
     }
 
 
