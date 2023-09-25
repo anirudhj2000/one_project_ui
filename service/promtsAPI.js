@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = 'http://143.110.244.194:8000/'
+const baseUrl = 'https://mapmymind.computersforpeace.net/'
 
 export const PostPrompt = (data) => {
 
