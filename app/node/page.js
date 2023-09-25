@@ -1,33 +1,23 @@
 'use client'
 import React from "react";
 import Chat from "@/components/chatui";
-import ReactFlow, { useNodesState, useEdgesState, addEdge } from 'reactflow';
+import ReactFlow, { useNodesState, useEdgesState, addEdg,MiniMap,Controls } from 'reactflow';
 import NodeDetails from "@/components/nodeDetails";
-
+import Loader from "@/components/loader";
 import 'reactflow/dist/style.css';
-import { GetPromptResult } from "@/service/promtsAPI";
-
-// const initialNodes = [
-//     { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-//     { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-//     { id: '3', position: { x: 100, y: 0 }, data: { label: '3' } },
-//     { id: '4', position: { x: 100, y: 100 }, data: { label: '4' } },
-//     { id: '5', position: { x: -100, y: 100 }, data: { label: '5' } },
-// ];
-// const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }, { id: 'e1-2', source: '1', target: '3' }, { id: 'e1-2', source: '1', target: '4' }, { id: 'e1-2', source: '1', target: '2' }];
-
-
+import { GetPromptResult,PostPrompt,PostPrompts } from "@/service/promtsAPI";
+import { sampleResponse } from "@/utils/consts";
 
 const Node = () => {
 
     const [search, setSearch] = React.useState('')
     const [isNodeOpen, setIsNodeOpen] = React.useState(false)
-
     const [nodeData, setNodeData] = React.useState()
-
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [show, setShow] = React.useState(true)
+    const [loading,setLoading] = React.useState(false)
+    const [rootId, setRootId] = React.useState("")
 
     const onConnect = React.useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
@@ -41,49 +31,74 @@ const Node = () => {
         handleNodeOpen();
     };
 
-    const getPointOnCircle = (x, y, radius) => {
-        // Calculate the angle
-        const angle = Math.random() * 2 * Math.PI;
+    const postPromptResult = () => {
+        setLoading(true)
+        setShow(false)
+        let searchStr = search
+        let obj = {
+            string : search
+        }
 
-        // Calculate the coordinates of the point on the circle
-        const pointX = x + radius * Math.cos(angle);
-        const pointY = y + radius * Math.sin(angle);
-
-        // Return the coordinates of the point
-        return { x: pointX, y: pointY };
-    }
-
-    const generatePromptResult = () => {
-        GetPromptResult(search).then((res) => {
-            HandleResponse(res.data)
-            setShow(false)
+        PostPrompt(obj).then((res) => {
+            // HandleResponse(res.data)
+            generatePromptResult(res.data.prompt_id,searchStr)
+           localStorage.setItem("root",res.data.prompt_id)
         })
     }
 
-    const HandleResponse = (data) => {
+    const generatePromptResult = (id,search) => {
+        GetPromptResult(id).then((res) => {
+            HandleResponse(res.data, id,search)
+        })
+    }
+
+    const HandleResponse = (data, id,search) => {
         let listNodes = [];
         let listEdge = [];
+        let root = {x:data.length*150,y:200};
 
-        listNodes.push({ id: '1', position: { x: 400 + '', y: 400 + '' }, data: { label: search } })
+        let list= data
 
-        data.nodes.map((item, index) => {
-            let xy = getPointOnCircle(400, 400, 300);
-            let obj = { id: (index + 2) + '', position: { x: Math.round(xy.x) + "", y: Math.round(xy.y) + "" }, data: { label: item } }
+        list.map((rootNode,rootIndex) => {
+            if(rootIndex == 0){
+                listNodes.push({ id: rootNode.id, position: root, data: { label: search } })
+            }
 
-            listNodes.push(obj)
-            listEdge.push({ id: `e1-${index + 2}`, source: '1', target: (index + 2) + '' })
+            let parentNodeRes = {}
+            if(rootIndex != 0){
+                list.map((res) => {
+                        res.responses.map((res1) => {
+                            if(res1.response_id == rootNode.parent_response_id){
+                                parentNodeRes = res1
+                            }
+                        })
+                })
+            }
+            else{
+                parentNodeRes = rootNode
+            }
+
+            let parentNode = listNodes.find((item) => item.id == (rootIndex == 0 ? parentNodeRes.id :  parentNodeRes.response_id))
+
+            
+            rootNode.responses.map((node,nodeIndex) => {
+                 
+                let obj = { id: node.response_id, position: { x:parentNode.position.x/2 +  300 * (nodeIndex), y:parentNode.position.y + 400  }, data: { label: node.response_string } };
+                listNodes.push(obj)
+
+                listEdge.push({ id: `e1-${node.response_id}`, source: parentNode.id, target: node.response_id})
+            })
         })
 
-        console.log("node", listEdge, listNodes)
-
-
-        setNodes([...nodes,...listNodes])
-        setEdges([...edges,...listEdge])
+        setNodes([...nodes, ...listNodes])
+        setEdges([...edges, ...listEdge])
+        setSearch("")
+        setLoading(false)
     }
 
-    const handleSubPromptData = (subPromptData) => {
-        console.log(subPromptData)
-        HandleResponse(subPromptData.data)
+
+    const handleSubPromptData = () => {
+        generatePromptResult(localStorage.getItem("root"))
     }
 
 
@@ -103,16 +118,21 @@ const Node = () => {
                     onEdgesChange={onEdgesChange}
                     onConnect={onConnect}
                     onNodeClick={onNodeClick}
+                    fitView
 
-                />
+                >
+                {nodes.length > 0 ? <Controls/> :null}
+                {nodes.length > 0 ?  <MiniMap style={{height:80,width:120,background:'#000'}}/> :null}
+                </ReactFlow>
             </div>
             {show ? <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 w-5/12">
-                <div className="my-8">
-                    <Chat text={search} onChange={handleInputChange} onSubmit={() => generatePromptResult()} onClear={() => { setSearch('') }} />
+                <div className="my-2">
+                    <Chat text={search} onChange={handleInputChange} onSubmit={() => {postPromptResult()}}  />
                 </div>
-            </div> : null}
+            </div> : loading ?  <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 z-10"><Loader/></div> : null}
+            
             <div className={`fixed top-0 right-0 h-screen w-4/12 bg-gray-200 transition-transform duration-500 transform drop-shadow-2xl ${isNodeOpen ? '-translate-x-0' : 'translate-x-full hidden'}`}>
-                <NodeDetails nodeData={nodeData} isNodeOpen={isNodeOpen} handleNodeOpen={handleNodeOpen} handleSubPromptData={handleSubPromptData}/>
+                <NodeDetails nodeData={nodeData} isNodeOpen={isNodeOpen} handleNodeOpen={handleNodeOpen} handleSubPromptData={handleSubPromptData} />
             </div>
         </div>
     )

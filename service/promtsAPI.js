@@ -1,10 +1,13 @@
 import axios from 'axios'
 
-const baseUrl = 'http://127.0.0.1:8000/'
+const baseUrl = 'http://143.110.244.194:8000/'
 
-export const GetPromptResult = (search) => {
+export const PostPrompt = (data) => {
 
-    return axios.post(baseUrl + 'flows/prompt', {
-        string: search
-    })
+    return axios.post(baseUrl + 'flows/prompt',data)
+}
+
+export const GetPromptResult = (id) => {
+
+    return axios.get(baseUrl + `flows/prompt?prompt_id=${id}`,)
 }

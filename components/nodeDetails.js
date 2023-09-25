@@ -2,20 +2,33 @@
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
-import { GetPromptResult } from '@/service/promtsAPI';
+import { GetPromptResult,PostPrompt} from '@/service/promtsAPI';
 
 const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [subPrompt, setSubPrompt] = useState('');
 
 
-    const handleClick = () => {
-        setIsOpen(!isOpen);
-    };
+    // React.useEffect(() => {
+    //    document.addEventListener('keydown', handleKeyPress);
+    // },[])
+    // const handleKeyPress = (event) => {
+    //     if (event.key === 'Enter') {
+    //         getSubPromptData()
+    //     }
+    // }
 
     const getSubPromptData = () => {
-        GetPromptResult(subPrompt).then( response => {
+       let obj =  {
+            response_id : nodeData.id,
+            string : subPrompt
+        }
+
+        console.log("asas",obj,nodeData)
+        PostPrompt(obj).then( response => {
             handleSubPromptData(response);
+            handleNodeOpen()
+            setSubPrompt("")
         })
     }
 
@@ -25,15 +38,15 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
 
     return (
         <div className='flex flex-col h-full bg-[#000] justify-between'>
-            <div className='flex flex-row w-full bg-[#202123] justify-end items-center pt-5 pb-5 pr-2 self-start'>
-                <div className='text-white text-bold'>{nodeData?.data.label || ''}</div>
+            <div className='flex flex-row w-full bg-[#000] justify-end items-center pt-3 pb-3 pr-2 self-start'>
+                {/* s<div className='text-white text-bold'>{nodeData?.data.label || ''}</div> */}
                 <button onClick={handleNodeOpen}
                     className="flex flex-col cursor-pointer text-white hover:bg-red-200 hover:text-black">
                     <CloseIcon />
                 </button>
             </div>
             <div className='flex flex-grow overflow-auto text-white'>
-                {nodeData?.data.label}
+               <p className='px-2'>{nodeData?.data.label}</p>
             </div>
             <div className='flex flex-row h-10 relative'>
                 <input
