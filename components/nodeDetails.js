@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import { GetPromptResult,PostPrompt} from '@/service/promtsAPI';
+import Chat from './chatui';
 
 const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -14,19 +15,21 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
         subPromptRef.current = event.target.value
     }
 
-    React.useEffect(() => {
-       document.addEventListener('keydown', handleKeyPress);
-    },[])
+    // React.useEffect(() => {
+    //    document.addEventListener('keydown', handleKeyPress,true);
+    // },[])
 
 
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter' && isNodeOpen) {
-            getSubPromptData()
-        }
-    }
+    // const handleKeyPress = (event) => {
+    //     if (event.key === 'Enter' && isNodeOpen) {
+    //         getSubPromptData()
+            
+    //     }
+    // }
 
     const getSubPromptData = () => {
-        console.log("asas",nodeData)
+       document.removeEventListener('keydown',handleKeyPress,true)
+    console.log("asas",nodeData)
        let obj =  {
             response_id : nodeData.id,
             string : subPromptRef.current
@@ -37,7 +40,7 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
         PostPrompt(obj).then( response => {
             handleSubPromptData(response);
             setSubPrompt("")
-            document.removeEventListener('keydown',handleKeyPress)
+            
         })
     }
 
@@ -53,7 +56,10 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
             <div className='flex flex-grow overflow-auto text-white'>
                <p className='px-2'>{nodeData?.data.label}</p>
             </div>
-            <div className='flex flex-row h-10 relative'>
+            <div className='mx-1'>
+                <Chat title="Submit" text={subPrompt} onChange={HandleSubPrompt} onSubmit={() => getSubPromptData()} />
+            </div>
+            {/* <div className='flex flex-row h-10 relative'>
                 <input
                     type="text"
                     value={subPrompt}
@@ -71,7 +77,7 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
                 >
                     <SendIcon />
                 </button>
-            </div>
+            </div> */}
         </div>
     )
 };

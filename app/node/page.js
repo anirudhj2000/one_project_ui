@@ -29,6 +29,17 @@ const Node = () => {
 
     const onConnect = React.useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
+    React.useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown,true);
+     },[])
+ 
+ 
+     const handleKeyDown = (event) => {
+         if (event.key === 'Enter') {
+            postPromptResult();
+         }      
+     };
+
     const handleNodeOpen = () => {
         setIsNodeOpen(!isNodeOpen);
     }
@@ -40,6 +51,12 @@ const Node = () => {
     };
 
     const postPromptResult = () => {
+        document.removeEventListener('keydown',handleKeyDown,true)
+        if(nodes.length>0){
+            return;
+        }
+
+
         setLoading(true)
         setShow(false)
         let searchStr = search
@@ -137,7 +154,7 @@ const Node = () => {
             </div>
             {show ? <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 xl:w-5/12 md:w-8/12 sm:w-10/12">
                 <div className="my-2 w-full">
-                    <Chat text={search} onChange={handleSearch} onSubmit={() => {postPromptResult()}}  />
+                    <Chat title={"Start"} text={search} onChange={handleSearch} onSubmit={() => {postPromptResult()}}  />
                 </div>
             </div> : loading ?  <div className="absolute inset-0 h-full w-full bottom-1/2 left-1/2 transform -translate-x-1/2 z-10"><RippleLoader/></div> : null}
             
