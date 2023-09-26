@@ -1,0 +1,96 @@
+
+
+.container {
+   display: flex;
+   height: 100vh;
+   width: 100%;
+   align-items: center;
+   justify-content: center;
+}
+
+.container button {
+   position: absolute;
+   animation: ripple 1s infinite;
+   border-radius: 100%;
+   border: none;
+   box-shadow: inset 10px 10px 20px #092e11, inset -10px -10px 20px #315e3b;
+   transition: 0.5s ease-in all;
+   opacity: 0;
+}
+
+
+.bounce2 {
+  animation: bounce2 2s ease infinite;
+    z-index: 3;
+    position: absolute;
+    height: 120px;
+}
+
+.bounce2 img{
+    height: 100px;
+}
+
+@keyframes bounce2 {
+	0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+	40% {transform: translateY(-30px);}
+	60% {transform: translateY(-15px);}
+}
+
+/* // Hover effect
+
+// button::after {
+//    content: "";
+//    display: block;
+//    border-radius: 100%;
+//    border: none;
+//    top: 0;
+//    left: 0;
+// box-shadow: inset 10px 10px 20px #a5a7a9,
+//             inset -10px -1px 20px #ffffff;
+//    opacity: 0;
+//    transition: 1s ease all;
+// }
+
+// button:hover {
+//    box-shadow: 0px 0px 0px #ffffff;
+//    opacity: 0;
+//    transform: scale(1);
+// }
+
+// button:hover::after {
+//    transition: 1s ease all;
+//    opacity: 1;
+// } */
+
+@keyframes ripple {
+   0% {
+      width: 20px;
+      height: 20px;
+      opacity: 1;
+   }
+   100% {
+      width: 400px;
+      height: 200px;
+      opacity: 0;
+   }
+}
+
+.container button:nth-child(1) {
+   animation-delay: 500ms;
+}
+
+.container button:nth-child(2) {
+   animation-delay: 1000ms;
+}
+
+.container button:nth-child(3) {
+   animation-delay: 1500ms;
+}
+
+.container button:nth-child(4) {
+   animation-delay: 2000ms;
+}
+
+.container button:nth-child(5) {
+   animation-delay: 2500ms;
+}
