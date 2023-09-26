@@ -7,33 +7,38 @@ import { GetPromptResult,PostPrompt} from '@/service/promtsAPI';
 const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [subPrompt, setSubPrompt] = useState('');
+    const subPromptRef = React.useRef(subPrompt);
+
+    const HandleSubPrompt = (event) => {
+        setSubPrompt(event.target.value)
+        subPromptRef.current = event.target.value
+    }
+
+    React.useEffect(() => {
+       document.addEventListener('keydown', handleKeyPress);
+    },[])
 
 
-    // React.useEffect(() => {
-    //    document.addEventListener('keydown', handleKeyPress);
-    // },[])
-    // const handleKeyPress = (event) => {
-    //     if (event.key === 'Enter') {
-    //         getSubPromptData()
-    //     }
-    // }
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter' && isNodeOpen) {
+            getSubPromptData()
+        }
+    }
 
     const getSubPromptData = () => {
+        console.log("asas",nodeData)
        let obj =  {
             response_id : nodeData.id,
-            string : subPrompt
+            string : subPromptRef.current
         }
 
         console.log("asas",obj,nodeData)
+        handleNodeOpen()
         PostPrompt(obj).then( response => {
             handleSubPromptData(response);
-            handleNodeOpen()
             setSubPrompt("")
+            document.removeEventListener('keydown',handleKeyPress)
         })
-    }
-
-    const onChangeSubPrompt = (event) => {
-        setSubPrompt(event.target.value);
     }
 
     return (
@@ -52,7 +57,7 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
                 <input
                     type="text"
                     value={subPrompt}
-                    onChange={onChangeSubPrompt}
+                    onChange={HandleSubPrompt}
                     className="h-full w-full z-0 p-2 bg-[#626262] focus:ring-0"
                     placeholder="Select Sub Prompt"
                     required
