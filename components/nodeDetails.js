@@ -77,9 +77,9 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
             </div>
             <div className='flex flex-col p-4'>
                 {
-                    suggestions.map((item) => {
+                    suggestions.map((item,index) => {
                         return(
-                            <div className='w-full h-[48px] my-4'><p>{item}</p></div>
+                            <div key={index} className='w-full h-[48px] my-4'><p>{item}</p></div>
                         )
                     })
                 }
