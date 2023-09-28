@@ -4,10 +4,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import { GetPromptResult,PostPrompt} from '@/service/promtsAPI';
 import Chat from './chatui';
+import axios from 'axios';
 
-const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData }) => {
+const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData,handleLoading }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [subPrompt, setSubPrompt] = useState('');
+    const [suggestions,setSuggestions] = useState([])
     const subPromptRef = React.useRef(subPrompt);
 
     const HandleSubPrompt = (event) => {
@@ -25,10 +27,23 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
     //         getSubPromptData()
             
     //     }
-    // }
+    // }'
+
+    React.useEffect(() => {
+        setSuggestions([])
+    },[isNodeOpen])
+
+    React.useEffect(() => {
+        if(isNodeOpen)
+        {
+            axios.get(`https://mapmymind.computersforpeace.net/flows/suggestion?response_id=${nodeData.id || ''}`)
+            .then((res) => {
+                setSuggestions(res.data)
+            })
+        }
+    },[isNodeOpen])
 
     const getSubPromptData = () => {
-       document.removeEventListener('keydown',handleKeyPress,true)
     console.log("asas",nodeData)
        let obj =  {
             response_id : nodeData.id,
@@ -36,17 +51,21 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
         }
 
         console.log("asas",obj,nodeData)
+        handleLoading()
         handleNodeOpen()
         PostPrompt(obj).then( response => {
             handleSubPromptData(response);
             setSubPrompt("")
             
+        }).catch((err) => {
+            console.log("err");
+            handleLoading()
         })
     }
 
     return (
-        <div className='flex flex-col h-full bg-[#000] justify-between'>
-            <div className='flex flex-row w-full bg-[#000] justify-end items-center pt-3 pb-3 pr-2 self-start'>
+        <div className='flex flex-col h-full bg-[#483f69] justify-between rounded-md py-2 px-2'>
+            <div className='flex flex-row w-full bg-[#483f69] justify-end items-center pt-3 pb-3 pr-2 self-start rounded-md'>
                 {/* s<div className='text-white text-bold'>{nodeData?.data.label || ''}</div> */}
                 <button onClick={handleNodeOpen}
                     className="flex flex-col cursor-pointer text-white hover:bg-red-200 hover:text-black">
@@ -55,6 +74,15 @@ const NodeDetails = ({ isNodeOpen, handleNodeOpen, nodeData, handleSubPromptData
             </div>
             <div className='flex flex-grow overflow-auto text-white'>
                <p className='px-2'>{nodeData?.data.label}</p>
+            </div>
+            <div className='flex flex-col p-4'>
+                {
+                    suggestions.map((item,index) => {
+                        return(
+                            <div key={index} className='w-full h-[48px] my-4'><p>{item}</p></div>
+                        )
+                    })
+                }
             </div>
             <div className='mx-1'>
                 <Chat title="Submit" text={subPrompt} onChange={HandleSubPrompt} onSubmit={() => getSubPromptData()} />

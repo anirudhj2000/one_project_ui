@@ -13,7 +13,7 @@
    animation: ripple 1s infinite;
    border-radius: 100%;
    border: none;
-   box-shadow: inset 10px 10px 20px #092e11, inset -10px -10px 20px #315e3b;
+   box-shadow: inset 10px 10px 20px #b4a4ed, inset -10px -10px 20px #7b6bb5;
    transition: 0.5s ease-in all;
    opacity: 0;
 }
