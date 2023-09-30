@@ -4,7 +4,7 @@ import Chat from "@/components/chatui";
 import ReactFlow, {
   useNodesState,
   useEdgesState,
-  addEdg,
+  addEdge,
   MiniMap,
   useReactFlow,
   Controls,
@@ -12,7 +12,7 @@ import ReactFlow, {
 import NodeDetails from "@/components/nodeDetails";
 import Loader from "@/components/loader";
 import "reactflow/dist/style.css";
-import { GetPromptResult, PostPrompt, PostPrompts } from "@/service/promtsAPI";
+import { GetPromptResult, PostPrompt } from "@/service/promtsAPI";
 import { sampleResponse } from "@/utils/consts";
 import RippleLoader from "@/components/rippleLoader";
 import Sidebar from "@/components/sidebar";
@@ -28,18 +28,13 @@ const Node = () => {
   const [show, setShow] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
   const [rootId, setRootId] = React.useState("");
+  const [animatedEdge, setAnimatedEdge] = React.useState('')
   const reactFlowInstance = useReactFlow();
-  const [rfInstance, setRfInstance] = React.useState(null);
 
   const handleSearch = (event) => {
     searchRef.current = event.target.value;
     setSearch(event.target.value);
   };
-
-  const onLoad = useCallback((instance) => {
-    reactFlowInstance.fitView();
-    setRfInstance(instance);
-  }, []);
 
   const onConnect = React.useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -56,35 +51,55 @@ const Node = () => {
     }
   };
 
-  const handleTransform = (transform) => () => {
-    console.log("called animate");
-    const {
-      position: [x, y],
-      zoom,
-    } = rfInstance.toObject();
-
-    animate({
-      from: { x: x, y: y, zoom },
-      to: transform,
-      duration: 500,
-      onUpdate: ({ x, y, zoom }) => rfInstance.setTransform({ x, y, zoom }),
-    });
-  };
 
   const handleNodeOpen = () => {
+    if(isNodeOpen){
+      handleNodeAnimation()
+    }
     setIsNodeOpen(!isNodeOpen);
   };
 
   const onNodeClick = (event, node) => {
     // Handle node click here
+    console.log("handle node click",node)
+    handleNodeAnimation('add',node)
     setNodeData(node);
     handleNodeOpen();
   };
 
+  const handleNodeAnimation = (mode,node) => {
+    console.log("props",mode,node)
+    if(mode == 'add'){
+        console.log("add")
+        reactFlowInstance.fitBounds({x:node.position.x,y:node.position.y - 200,width:400,height:400},{duration:500})
+        let edgeList = [...edges];
+        setAnimatedEdge(node.id)
+        edgeList.forEach((item) => {
+          if(item.target == node.id){
+            console.log("here111")
+            item["animated"] = true
+          }
+        })
+        setEdges(edgeList)
+    }
+    else{
+      console.log("nope")
+      reactFlowInstance.fitView({duration:500})
+      let edgeList = [...edges];
+      edgeList.forEach((item) => {
+        if(item.target == animatedEdge){
+          item["animated"] = false
+        }
+      })
+      setEdges(edgeList)
+      setAnimatedEdge("")
+    }
+  }
+
   const postPromptResult = () => {
     window.removeEventListener("keydown", handleKeyDown, true);
 
-    if (searchRef.length == 0) {
+    if (searchRef.current.length == 0) {
       console.log("here");
       return;
     }
@@ -119,6 +134,20 @@ const Node = () => {
       HandleResponse(res.data, id);
     });
   };
+
+  const handleTransform = (transform) => {
+      const obj = reactFlowInstance.toObject();
+
+      console.log("called animate",obj,transform)
+
+      animate({
+        from: { x: obj.viewport.x, y: obj.viewport.y, zoom : obj.viewport.zoom },
+        to: transform,
+        duration:500,
+        onUpdate: ({ x, y, zoom }) => reactFlowInstance.fitView({duration:500}),
+      });
+    }
+
 
   const HandleResponse = (data, id) => {
     let listNodes = [];
@@ -178,7 +207,8 @@ const Node = () => {
     setEdges([...edges, ...listEdge]);
     setSearch("");
     setTimeout(() => {
-      reactFlowInstance.fitView();
+        console.log("timeout done")
+        handleTransform({ x: 0, y: 0, zoom: 1 })
     }, 250);
     setLoading(false);
   };
@@ -202,7 +232,6 @@ const Node = () => {
           onConnect={onConnect}
           onNodeClick={onNodeClick}
           fitView
-          onLoad={onLoad}
         >
           {nodes.length > 0 ? <Controls /> : null}
           {nodes.length > 0 ? (
