@@ -36,32 +36,6 @@
 	60% {transform: translateY(-15px);}
 }
 
-/* // Hover effect
-
-// button::after {
-//    content: "";
-//    display: block;
-//    border-radius: 100%;
-//    border: none;
-//    top: 0;
-//    left: 0;
-// box-shadow: inset 10px 10px 20px #a5a7a9,
-//             inset -10px -1px 20px #ffffff;
-//    opacity: 0;
-//    transition: 1s ease all;
-// }
-
-// button:hover {
-//    box-shadow: 0px 0px 0px #ffffff;
-//    opacity: 0;
-//    transform: scale(1);
-// }
-
-// button:hover::after {
-//    transition: 1s ease all;
-//    opacity: 1;
-// } */
-
 @keyframes ripple {
    0% {
       width: 20px;
