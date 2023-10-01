@@ -74,7 +74,7 @@ const NodeDetails = ({
     });
 
     promptStr +=
-      "{{#assistant~}}" + "Here is some additional context" + "{{~/assistant}}";
+      "{{#assistant~}}" + "Can you provide some additional context ?" + "{{~/assistant}}";
     promptStr += "{{#user~}}" + subPromptRef.current + "{{~/user}}";
 
     let obj = {

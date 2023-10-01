@@ -17,6 +17,7 @@ import { sampleResponse } from "@/utils/consts";
 import RippleLoader from "@/components/rippleLoader";
 import Sidebar from "@/components/sidebar";
 import { animate } from "popmotion";
+import StarLoader from "../../components/starLoader";
 
 const Node = () => {
   const [search, setSearch] = React.useState("");
@@ -61,6 +62,7 @@ const Node = () => {
 
   const onNodeClick = (event, node) => {
     // Handle node click here
+   
     console.log("handle node click",node)
     handleNodeAnimation('add',node)
     setNodeData(node);
@@ -70,8 +72,9 @@ const Node = () => {
   const handleNodeAnimation = (mode,node) => {
     console.log("props",mode,node)
     if(mode == 'add'){
+      // setLoading(true)
         console.log("add")
-        reactFlowInstance.fitBounds({x:node.position.x,y:node.position.y - 200,width:400,height:400},{duration:500})
+        reactFlowInstance.fitBounds({x:node.position.x,y:node.position.y - 200,width:400,height:600},{duration:500})
         let edgeList = [...edges];
         setAnimatedEdge(node.id)
         edgeList.forEach((item) => {
@@ -84,6 +87,7 @@ const Node = () => {
     }
     else{
       console.log("nope")
+      // setLoading(false)
       reactFlowInstance.fitView({duration:500})
       let edgeList = [...edges];
       edgeList.forEach((item) => {
@@ -221,8 +225,11 @@ const Node = () => {
     setSearch(event.target.value);
   };
   return (
-    <div className="w-screen h-screen bg-gradient-to-r from-indigo-500">
-      <div className="absolute inset-0 h-full w-full bg-[#121212] bg-[linear-gradient(to_right,#ce8fff11_1px,transparent_1px),linear-gradient(to_bottom,#ce8fff11_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+    <div className="w-screen h-screen ">
+     {show ?  <div className={`w-screen h-screen absolute z-0`}>
+        <StarLoader speed={5}/> 
+      </div> :  loading ?  <div className={`w-screen h-screen absolute z-0`}><StarLoader speed={4}/></div> : <div className={`w-screen h-screen absolute z-0`}><StarLoader speed={5}/></div> }
+      <div className={`absolute inset-0 h-full w-full bg-[${ show ? '#12121255' :loading ? '#12121299' : '#121212'}] bg-[linear-gradient(to_right,#ce8fff11,transparent_1px),linear-gradient(to_bottom,#ce8fff11,transparent_1px)] bg-[size:24px_24px]`}></div>
       <div style={{ width: "100vw", height: "100vh" }}>
         <ReactFlow
           nodes={nodes}
@@ -243,7 +250,7 @@ const Node = () => {
         <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 xl:w-5/12 md:w-8/12 sm:w-10/12">
           <div
             id="chat-listeners"
-            className="my-2 w-full  shadow-xl shadow-[#c072fc44]"
+            className="my-2 w-full shadow-[0_0px_500px_-8px_#9000ff]"
           >
             <Chat
               title={"Start"}
@@ -255,11 +262,13 @@ const Node = () => {
             />
           </div>
         </div>
-      ) : loading ? (
-        <div className="absolute inset-0 h-full w-full bottom-1/2 left-1/2 transform -translate-x-1/2 z-10">
-          <RippleLoader />
-        </div>
-      ) : null}
+      ) 
+      // : loading ? (
+      //   <div className="absolute inset-0 h-full w-full bottom-1/2 left-1/2 transform -translate-x-1/2 z-10">
+      //     <RippleLoader />
+      //   </div>
+      // ) 
+      : null}
 
       <div
         className={`fixed top-2 right-2 h-screen pb-4 w-3/12 bg-transparent transition-transform duration-500 transform drop-shadow-2xl rounded-xl ${
