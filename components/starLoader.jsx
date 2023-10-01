@@ -1,6 +1,8 @@
+'use client'
 import * as React from "react";
-const StarLoader = (props) => (
-  <svg
+const StarLoader = (props) => {
+
+  return(<svg
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
     style={{
@@ -16,7 +18,7 @@ const StarLoader = (props) => (
     viewBox="0 0 1920 1080"
     {...props}
   >
-    <g transform={`translate(${window.innerWidth/2},454.5) scale(1,1) translate(-960,-484.5)`}>
+    <g transform={`translate(${700},454.5) scale(1,1) translate(-960,-484.5)`}>
       <g transform="translate(148.10982174377523 743.0430562861152)">
         <animateTransform
           attributeName="transform"
@@ -9418,6 +9420,6 @@ const StarLoader = (props) => (
         </g>
       </g>
     </g>
-  </svg>
-);
+  </svg>)
+};
 export default React.memo(StarLoader);
