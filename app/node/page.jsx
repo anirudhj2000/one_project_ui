@@ -18,6 +18,7 @@ import RippleLoader from "@/components/rippleLoader";
 import Sidebar from "@/components/sidebar";
 import { animate } from "popmotion";
 import StarLoader from "../../components/starLoader";
+import Feedback from "../../components/feedback";
 
 const Node = () => {
   const [search, setSearch] = React.useState("");
@@ -225,7 +226,7 @@ const Node = () => {
     setSearch(event.target.value);
   };
   return (
-    <div className="w-screen h-screen ">
+    <div className="w-screen h-screen max-h-screen">
      {show ?  <div className={`w-screen h-screen absolute z-0`}>
         <StarLoader speed={5}/> 
       </div> :  loading ?  <div className={`w-screen h-screen absolute z-0`}><StarLoader speed={4}/></div> : <div className={`w-screen h-screen absolute z-0`}><StarLoader speed={5}/></div> }
@@ -258,6 +259,7 @@ const Node = () => {
               onChange={handleSearch}
               onSubmit={() => {
                 postPromptResult();
+                
               }}
             />
           </div>
@@ -286,11 +288,14 @@ const Node = () => {
         />
       </div>
       <div
-        className={`fixed top-2 left-2 h-screen pb-6 w-3/12 bg-transparent transition-transform duration-500 transform drop-shadow-2xl rounded-xl ${
-          false ? "translate-x-0" : "-translate-x-full hidden"
-        }`}
+        className={`fixed top-2 left-2 h-screen pb-6  bg-transparent drop-shadow-2xl rounded-xl w-[70px] transition-all duration-900 ease-in-out hover:w-[250px]`}
       >
         <Sidebar />
+      </div>
+      <div
+        className={`absolute right-0 bottom-0 h-screen pb-6  bg-transparent drop-shadow-2xl rounded-xl w-[60px] h-[60px] transition-all duration-900 ease-in-out hover:w-[500px] hover:h-[300px]`}
+      >
+        <Feedback/>
       </div>
     </div>
   );
