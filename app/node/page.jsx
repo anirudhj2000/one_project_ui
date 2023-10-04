@@ -282,7 +282,7 @@ const Node = () => {
       : null}
 
       <div
-        className={`z-2 top-2 right-2 h-screen pb-4 w-3/12 bg-[#fff] duration-500 transform drop-shadow-2xl rounded-xl ${
+        className={`fixed top-2 right-2 h-screen pb-4 w-3/12 bg-transparent transition-transform duration-500 transform drop-shadow-2xl rounded-xl ${
           isNodeOpen ? "-translate-x-0" : "translate-x-full hidden"
         }`}
       >
