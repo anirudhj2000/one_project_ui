@@ -28,13 +28,12 @@ const NodeDetails = ({
   // React.useEffect(() => {
   //    document.addEventListener('keydown', handleKeyPress,true);
   // },[])
-
   // const handleKeyPress = (event) => {
   //     if (event.key === 'Enter' && isNodeOpen) {
   //         getSubPromptData()
 
   //     }
-  // }'
+  // }
 
   React.useEffect(() => {
     setSuggestions([]);
@@ -74,7 +73,7 @@ const NodeDetails = ({
     });
 
     promptStr +=
-      "{{#assistant~}}" + "Can you provide some additional context ?" + "{{~/assistant}}";
+      // "{{#assistant~}}" + "Can you provide some additional context ?" + "{{~/assistant}}";
     promptStr += "{{#user~}}" + subPromptRef.current + "{{~/user}}";
 
     let obj = {
