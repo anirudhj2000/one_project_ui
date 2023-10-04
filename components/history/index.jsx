@@ -16,9 +16,9 @@ const History = () => {
             </a>
             <div className="hidden group-hover:block">
                 {
-                    list.map((item) => {
+                    list.map((item,index) => {
                         return(
-                            <a className="bg-[#ffffff12] flex flex-row items-center mb-2 h-[36px] px-2 rounded-md py-4">
+                            <a key={index} className="bg-[#ffffff12] flex flex-row items-center mb-2 h-[36px] px-2 rounded-md py-4">
                                 <HistoryIcon sx={{color:'#ffffff88'}}/>
                                 <p className="mx-5 text-[#ffffff00] tranisition duration-200 group-hover:text-[#fff] text-[0.8rem] group-hover:mx-2 hidden group-hover:block">{ item.length > 15 ? item.slice(0,15) + '...' : item}</p>
                             </a>

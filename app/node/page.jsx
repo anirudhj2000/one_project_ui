@@ -228,14 +228,14 @@ const Node = () => {
     setSearch(event.target.value);
   };
   return (
-    <div className="w-screen h-screen max-h-screen">
+    <div className="w-screen max-h-screen">
       <div className={`w-screen h-screen absolute z-0 `}>
         {
         show ?  
         <StarLoader speed={4}/> 
           :  
           loading ?  
-          <StarLoader speed={4}/> :
+          <StarLoader speed={4}/> : 
           <StarLoader speed={6}/> 
         }
        </div>
@@ -282,7 +282,7 @@ const Node = () => {
       : null}
 
       <div
-        className={` top-2 right-2 h-screen pb-4 w-3/12 bg-transparent transition-transform duration-500 transform drop-shadow-2xl rounded-xl ${
+        className={`z-2 top-2 right-2 h-screen pb-4 w-3/12 bg-[#fff] duration-500 transform drop-shadow-2xl rounded-xl ${
           isNodeOpen ? "-translate-x-0" : "translate-x-full hidden"
         }`}
       >
@@ -296,12 +296,14 @@ const Node = () => {
           }}
         />
       </div>
+
+
       {!loading ? <div
         className={`fixed top-2 left-2 h-screen pb-6  bg-transparent drop-shadow-2xl rounded-xl w-[70px] transition-all duration-100 ease-in-out hover:w-[250px]`}
       >
         <Sidebar />
       </div>:null}
-      {isNodeOpen ? <div
+      {!isNodeOpen ? <div
         className={`absolute z-0 right-0 bottom-0 pb-6 mr-6  bg-transparent drop-shadow-2xl rounded-xl w-[60px] h-[60px] transition-all duration-300 ease-in-out hover:w-[500px] hover:h-[300px]`}
       >
         <Feedback/>
