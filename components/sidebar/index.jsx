@@ -16,7 +16,7 @@ const Sidebar = () => {
                 <a onClick={() => {router.push('/')}} className="flex flex-row w-full items-center group-hover:justify-center rounded-md overflow-hidden p-2 bg-[#ffffff33]">
                     <LogoutIcon color="error"/>
                     <div className="transition-all mx-2 group-hover:mx-3">
-                        <p className="text-[0.8rem] text-[#ffffff00] group-hover:text-[#fff]">Logout</p>
+                        <p className="text-[0.8rem] text-[#fff] hidden group-hover:block">Logout</p>
                     </div>
                 </a>
            </div>
