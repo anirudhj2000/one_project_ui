@@ -106,11 +106,13 @@ const Node = () => {
 
     if (searchRef.current.length == 0) {
       console.log("here");
+      setLoading(false);
       return;
     }
 
     if (nodes.length > 0) {
       console.log("there");
+      setLoading(false);
       return;
     }
 
@@ -129,7 +131,7 @@ const Node = () => {
       })
       .catch((err) => {
         console.log("err");
-        setLoading(!loading);
+        setLoading(false);
         setShow(true);
       });
   };
@@ -137,7 +139,7 @@ const Node = () => {
   const generatePromptResult = (id) => {
     GetPromptResult(id).then((res) => {
       HandleResponse(res.data, id);
-    });
+    }).catch(() => setLoading(false));
   };
 
   const handleTransform = (transform) => {
@@ -227,11 +229,18 @@ const Node = () => {
   };
   return (
     <div className="w-screen h-screen max-h-screen">
-     {show ?  <div className={`w-screen h-screen absolute z-0`}>
-        <StarLoader speed={5}/> 
-      </div> :  loading ?  <div className={`w-screen h-screen absolute z-0`}><StarLoader speed={4}/></div> : <div className={`w-screen h-screen absolute z-0`}><StarLoader speed={5}/></div> }
-      <div className={`absolute inset-0 h-full w-full bg-[${ show ? '#12121255' :loading ? '#12121299' : '#121212'}] bg-[linear-gradient(to_right,#ce8fff11,transparent_1px),linear-gradient(to_bottom,#ce8fff11,transparent_1px)] bg-[size:24px_24px]`}></div>
-      <div style={{ width: "100vw", height: "100vh" }}>
+      <div className={`w-screen h-screen absolute z-0 `}>
+        {
+        show ?  
+        <StarLoader speed={4}/> 
+          :  
+          loading ?  
+          <StarLoader speed={4}/> :
+          <StarLoader speed={6}/> 
+        }
+       </div>
+      <div className={`absolute inset-0 h-full w-full bg-[#1f1f1f99] bg-[linear-gradient(to_right,#ce8fff11,transparent_1px),linear-gradient(to_bottom,#ce8fff11,transparent_1px)] bg-[size:24px_24px]`}></div>
+      <div style={{ width: "100vw", height: "100vh",background:'#c7c7c700'}}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -251,7 +260,7 @@ const Node = () => {
         <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 xl:w-5/12 md:w-8/12 sm:w-10/12">
           <div
             id="chat-listeners"
-            className="my-2 w-full shadow-[0_0px_500px_-8px_#9000ff]"
+            className="my-2 z-10 w-full shadow-[0_0px_500px_-8px_#9000ff]"
           >
             <Chat
               title={"Start"}
@@ -273,7 +282,7 @@ const Node = () => {
       : null}
 
       <div
-        className={`fixed top-2 right-2 h-screen pb-4 w-3/12 bg-transparent transition-transform duration-500 transform drop-shadow-2xl rounded-xl ${
+        className={` top-2 right-2 h-screen pb-4 w-3/12 bg-transparent transition-transform duration-500 transform drop-shadow-2xl rounded-xl ${
           isNodeOpen ? "-translate-x-0" : "translate-x-full hidden"
         }`}
       >
@@ -287,16 +296,16 @@ const Node = () => {
           }}
         />
       </div>
-      <div
-        className={`fixed top-2 left-2 h-screen pb-6  bg-transparent drop-shadow-2xl rounded-xl w-[70px] transition-all duration-900 ease-in-out hover:w-[250px]`}
+      {!loading ? <div
+        className={`fixed top-2 left-2 h-screen pb-6  bg-transparent drop-shadow-2xl rounded-xl w-[70px] transition-all duration-100 ease-in-out hover:w-[250px]`}
       >
         <Sidebar />
-      </div>
-      <div
-        className={`absolute right-0 bottom-0 h-screen pb-6  bg-transparent drop-shadow-2xl rounded-xl w-[60px] h-[60px] transition-all duration-900 ease-in-out hover:w-[500px] hover:h-[300px]`}
+      </div>:null}
+      {isNodeOpen ? <div
+        className={`absolute z-0 right-0 bottom-0 pb-6 mr-6  bg-transparent drop-shadow-2xl rounded-xl w-[60px] h-[60px] transition-all duration-300 ease-in-out hover:w-[500px] hover:h-[300px]`}
       >
         <Feedback/>
-      </div>
+      </div> :null}
     </div>
   );
 };
