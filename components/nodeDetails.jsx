@@ -39,30 +39,30 @@ const NodeDetails = ({
 
   React.useEffect(() => {
     setSuggestions([]);
-  }, [isNodeOpen]);
-
-  React.useEffect(() => {
-    if (isNodeOpen) {
-      axios
-        .get(
-          `https://mapmymind.computersforpeace.net/flows/suggestion?response_id=${
-            nodeData.id || ""
-          }`
-        )
-        .then((res) => {
-          let list = [];
-          res.data.map((item) => {
-            let obj = {
-              question: item,
-              answer: "",
-              show : false,
-            };
-            list.push(obj);
-          });
-          setSuggestions(list);
-        });
+    if(isNodeOpen){
+      GetPromptSuggestions()
     }
-  }, [isNodeOpen]);
+  }, [isNodeOpen,nodeData]);
+
+  const GetPromptSuggestions = () => {
+    axios.get(
+      `https://mapmymind.computersforpeace.net/flows/suggestion?response_id=${
+        nodeData.id || ""
+      }`
+    )
+    .then((res) => {
+      let list = [];
+      res.data.map((item) => {
+        let obj = {
+          question: item,
+          answer: "",
+          show : false,
+        };
+        list.push(obj);
+      });
+      setSuggestions(list);
+    });
+  }
 
   const HandleAccordionToggle = (index) => {
     let list = [...suggestions]
