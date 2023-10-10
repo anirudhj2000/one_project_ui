@@ -11,6 +11,9 @@ const Feedback = () => {
 
     return(
         <div className="h-full w-full m-2 bg-[#483f69] rounded-md flex flex-row items-center hover:bg-[#483f69] overflow-hidden group">
+            <div className="flex flex-row items-center group-hover:hidden">
+                <p className="text-[#fff] text-[0.75rem] mx-3">Feedback</p>
+            </div>
            <div className="flex flex-col h-full w-full items-center justify-between py-4 px-4 hidden group-hover:block">
                 <div className="text-[#fff] w-full">
                     <p>Email</p>

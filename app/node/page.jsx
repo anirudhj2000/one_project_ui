@@ -300,7 +300,7 @@ const Node = () => {
         <Sidebar />
       </div>:null}
       {!isNodeOpen ? <div
-        className={`absolute z-0 right-0 bottom-0 pb-6 mr-6  bg-transparent drop-shadow-2xl rounded-xl w-[60px] h-[60px] transition-all duration-300 ease-in-out hover:w-[500px] hover:h-[300px]`}
+        className={`absolute z-0 right-0 bottom-0 pb-6 mr-6  bg-transparent drop-shadow-2xl rounded-xl w-[80px] h-[60px] transition-all duration-300 ease-in-out hover:w-[500px] hover:h-[300px]`}
       >
         <Feedback/>
       </div> :null}
