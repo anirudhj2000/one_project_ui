@@ -15,6 +15,7 @@ const Feedback = () => {
                 <p className="text-[#fff] text-[0.75rem] mx-3">Feedback</p>
             </div>
            <div className="flex flex-col h-full w-full items-center justify-between py-4 px-4 hidden group-hover:block">
+
                 <div className="text-[#fff] w-full">
                     <p>Email</p>
                     <input type="text" value={""} placeholder="email" onChange={() => {}} className="bg-[#e6e1f7] rounded-md w-full p-2 text-[#000]"/>
