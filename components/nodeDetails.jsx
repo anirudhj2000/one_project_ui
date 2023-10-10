@@ -123,6 +123,7 @@ const NodeDetails = ({
 
       <div className="">
         <div className="flex flex-col p-2 overflow-scroll">
+         {suggestions.length>0 && <p className="text-[0.7rem] text-[#fff] my-1">Additional Questions...</p>}
           {suggestions.map((item, index) => {
             return (
               <QuestionAccordion 
