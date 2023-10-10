@@ -9,7 +9,7 @@ const Chat = ({title, text, onChange, onSubmit, onClear }) => {
                 type="text"
                 value={text}
                 onChange={onChange}
-                className="h-full w-full z-0 rounded-[4px] px-2 focus:border-0 text-[#fff] text-sm w-[500px] bg-[#ada0d9] placeholder:text-[#fff]"
+                className="h-full w-full z-0 rounded-[4px] px-2 focus:border-0 text-[#fff] text-sm  bg-[#ada0d9] placeholder:text-[#fff]"
                 placeholder="Type here"
                 required
             />
