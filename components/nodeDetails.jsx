@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import { GetPromptResult, PostPrompt } from "@/service/promtsAPI";
+import QuestionAccordion from "./questionAccordion";
 import Chat from "./chatui";
 import axios from "axios";
+import { list } from "postcss";
 
 let promptString = "{{#system~}}You are a helpful and terse system{{~/system}}";
 
@@ -53,6 +55,7 @@ const NodeDetails = ({
             let obj = {
               question: item,
               answer: "",
+              show : false,
             };
             list.push(obj);
           });
@@ -60,6 +63,12 @@ const NodeDetails = ({
         });
     }
   }, [isNodeOpen]);
+
+  const HandleAccordionToggle = (index) => {
+    let list = [...suggestions]
+    list[index].show = !list[index].show;
+    setSuggestions(list)
+  }
 
   const getSubPromptData = () => {
     console.log("asas", nodeData);
@@ -111,26 +120,21 @@ const NodeDetails = ({
           <p className="px-2">{nodeData?.data.label}</p>
         </div>
       </div>
+
+      {/* <QuestionAccordion question={suggestions[0]?.question} answer={suggestions[0]?.answer} onChangeAnswer={() => {let list = [...suggestions];
+                  list[index].answer = e.target.value;
+                  setSuggestions(list);}} handleToggle={() => {HandleAccordionToggle(0)}} open={suggestions[0]?.show}/> */}
       <div className="flex flex-col p-4 h-7/12 overflow-scroll">
         {suggestions.map((item, index) => {
           return (
-            <div
-              key={index}
-              className="w-full flex flex-col my-4 bg-[#ada0d9] p-4 rounded-md"
-            >
-              <p className="text-[0.75rem] text-white">{item.question}</p>
-              <textarea
-                className="mt-2 p-2 rounded-md text-[#000] bg-[#e6e1f7] text-[0.75rem]"
-                onChange={(e) => {
-                  let list = [...suggestions];
-                  list[index].answer = e.target.value;
-                  setSuggestions(list);
-                }}
-                placeholder="Enter answer"
-              >
-                {item.answer}
-              </textarea>
-            </div>
+            <QuestionAccordion 
+              question={item.question} 
+              answer={item.answer} 
+              onChangeAnswer={() => {let list = [...suggestions];
+              list[index].answer = e.target.value;
+              setSuggestions(list);}} 
+              handleToggle={() => {HandleAccordionToggle(index)}} 
+              open={item.show}/>
           );
         })}
       </div>
