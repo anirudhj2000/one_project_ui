@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
-import { GetPromptResult, PostPrompt } from "@/service/promtsAPI";
+import { GetPromptResult, PostPrompt, GetSuggestionsResult } from "@/service/promtsAPI";
 import QuestionAccordion from "./questionAccordion";
 import Chat from "./chatui";
 import axios from "axios";
-import { list } from "postcss";
+import { list } from "postcss"; 
 
 let promptString = "{{#system~}}You are a helpful and terse system{{~/system}}";
 
@@ -27,16 +27,6 @@ const NodeDetails = ({
     subPromptRef.current = event.target.value;
   };
 
-  // React.useEffect(() => {
-  //    document.addEventListener('keydown', handleKeyPress,true);
-  // },[])
-  // const handleKeyPress = (event) => {
-  //     if (event.key === 'Enter' && isNodeOpen) {
-  //         getSubPromptData()
-
-  //     }
-  // }
-
   React.useEffect(() => {
     setSuggestions([]);
     if(isNodeOpen){
@@ -45,11 +35,7 @@ const NodeDetails = ({
   }, [isNodeOpen,nodeData]);
 
   const GetPromptSuggestions = () => {
-    axios.get(
-      `https://mapmymind.computersforpeace.net/flows/suggestion?response_id=${
-        nodeData.id || ""
-      }`
-    )
+    GetSuggestionsResult(nodeData.id || '')
     .then((res) => {
       let list = [];
       res.data.map((item) => {
