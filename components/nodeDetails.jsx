@@ -127,6 +127,7 @@ const NodeDetails = ({
           {suggestions.map((item, index) => {
             return (
               <QuestionAccordion 
+                key={index}
                 question={item.question} 
                 answer={item.answer} 
                 onChangeAnswer={() => {let list = [...suggestions];

@@ -11,7 +11,7 @@ const Feedback = () => {
 
     return(
         <div className="h-full w-full m-2 bg-[#483f69] rounded-md flex flex-row items-center hover:bg-[#483f69] overflow-hidden group">
-           <div className="flex flex-col h-full w-full items-center justify-between py-4 px-4 hidden group-hover:block">
+           <div className="flex-col h-full w-full items-center justify-between py-4 px-4 hidden group-hover:block">
                 <div className="text-[#fff] w-full">
                     <p>Email</p>
                     <input type="text" value={""} placeholder="email" onChange={() => {}} className="bg-[#e6e1f7] rounded-md w-full p-2 text-[#000]"/>
