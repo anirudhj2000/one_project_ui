@@ -11,3 +11,7 @@ export const GetPromptResult = (id) => {
 
     return axios.get(baseUrl + `flows/prompt?prompt_id=${id}`,)
 }
+
+export const GetSuggestionsResult = (id) => {
+    return axios.get(baseUrl + `flows/suggestion?response_id=${id}`,)
+}

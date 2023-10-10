@@ -54,11 +54,9 @@ const Node = () => {
   };
 
 
-  const handleNodeOpen = () => {
-    if(isNodeOpen){
-      handleNodeAnimation()
-    }
+  const handleNodeOpen = (id) => {
     setIsNodeOpen(!isNodeOpen);
+    handleNodeAnimation()
   };
 
   const onNodeClick = (event, node) => {
@@ -67,7 +65,6 @@ const Node = () => {
     console.log("handle node click",node)
     handleNodeAnimation('add',node)
     setNodeData(node);
-    handleNodeOpen();
   };
 
   const handleNodeAnimation = (mode,node) => {
@@ -83,8 +80,12 @@ const Node = () => {
             console.log("here111")
             item["animated"] = true
           }
+          else{
+            item["animated"] = false
+          }
         })
         setEdges(edgeList)
+        setIsNodeOpen(true);
     }
     else{
       console.log("nope")
@@ -274,11 +275,6 @@ const Node = () => {
           </div>
         </div>
       ) 
-      // : loading ? (
-      //   <div className="absolute inset-0 h-full w-full bottom-1/2 left-1/2 transform -translate-x-1/2 z-10">
-      //     <RippleLoader />
-      //   </div>
-      // ) 
       : null}
 
       <div
@@ -304,7 +300,7 @@ const Node = () => {
         <Sidebar />
       </div>:null}
       {!isNodeOpen ? <div
-        className={`absolute z-0 right-0 bottom-0 pb-6 mr-6  bg-transparent drop-shadow-2xl rounded-xl w-[60px] h-[60px] transition-all duration-300 ease-in-out hover:w-[500px] hover:h-[300px]`}
+        className={`absolute z-0 right-0 bottom-0 pb-6 mr-6  bg-transparent drop-shadow-2xl rounded-xl w-[80px] h-[60px] transition-all duration-300 ease-in-out hover:w-[500px] hover:h-[300px]`}
       >
         <Feedback/>
       </div> :null}
