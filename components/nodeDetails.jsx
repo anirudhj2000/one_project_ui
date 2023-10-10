@@ -121,50 +121,30 @@ const NodeDetails = ({
         </div>
       </div>
 
-      {/* <QuestionAccordion question={suggestions[0]?.question} answer={suggestions[0]?.answer} onChangeAnswer={() => {let list = [...suggestions];
-                  list[index].answer = e.target.value;
-                  setSuggestions(list);}} handleToggle={() => {HandleAccordionToggle(0)}} open={suggestions[0]?.show}/> */}
-      <div className="flex flex-col p-4 h-7/12 overflow-scroll">
-        {suggestions.map((item, index) => {
-          return (
-            <QuestionAccordion 
-              question={item.question} 
-              answer={item.answer} 
-              onChangeAnswer={() => {let list = [...suggestions];
-              list[index].answer = e.target.value;
-              setSuggestions(list);}} 
-              handleToggle={() => {HandleAccordionToggle(index)}} 
-              open={item.show}/>
-          );
-        })}
+      <div className="">
+        <div className="flex flex-col p-2 overflow-scroll">
+          {suggestions.map((item, index) => {
+            return (
+              <QuestionAccordion 
+                question={item.question} 
+                answer={item.answer} 
+                onChangeAnswer={() => {let list = [...suggestions];
+                list[index].answer = e.target.value;
+                setSuggestions(list);}} 
+                handleToggle={() => {HandleAccordionToggle(index)}} 
+                open={item.show}/>
+            );
+          })}
+        </div>
+        <div className="mx-1 bottom-0">
+          <Chat
+            title="Submit"
+            text={subPrompt}
+            onChange={HandleSubPrompt}
+            onSubmit={() => getSubPromptData()}
+          />
+        </div>
       </div>
-      <div className="mx-1 bottom-0">
-        <Chat
-          title="Submit"
-          text={subPrompt}
-          onChange={HandleSubPrompt}
-          onSubmit={() => getSubPromptData()}
-        />
-      </div>
-      {/* <div className='flex flex-row h-10 relative'>
-                <input
-                    type="text"
-                    value={subPrompt}
-                    onChange={HandleSubPrompt}
-                    className="h-full w-full z-0 p-2 bg-[#626262] focus:ring-0"
-                    placeholder="Select Sub Prompt"
-                    required
-                >
-
-                </input>
-                <button
-                    className="rounded-border-0 z-10 select-none rounded bg-[#128059] p-1 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none peer-placeholder-shown:pointer-events-none peer-placeholder-shown:bg-blue-gray-500 peer-placeholder-shown:opacity-50 peer-placeholder-shown:shadow-none"
-                    type="button"
-                    data-ripple-light="true" onClick={() => getSubPromptData()}
-                >
-                    <SendIcon />
-                </button>
-            </div> */}
     </div>
   );
 };
